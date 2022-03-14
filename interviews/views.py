@@ -10,13 +10,13 @@ from rest_framework.generics import ListAPIView, CreateAPIView, \
 from rest_framework.response import Response
 
 from interviews.models import Interview
-from interviews.serializers import InterviewSerializer
+from interviews.serializers import InterviewSerializer, CustomInterviewSerializer, NewCustomInterviewSerializer
 from participants.models import Participant
 
 
 class GetInterview(ListAPIView):
     queryset = Interview.objects.all()
-    serializer_class = InterviewSerializer
+    serializer_class = NewCustomInterviewSerializer
 
 
 class CreateInterview(CreateAPIView):
@@ -128,6 +128,7 @@ class RetrieveInterview(RetrieveAPIView):
 class DeleteInterview(DestroyAPIView):
     queryset = Interview.objects.all()
     serializer_class = InterviewSerializer
+
 
 # def minimum_participants(sender, **kwargs):
 #     if len(kwargs['pk_set']) < 2:
