@@ -7,7 +7,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import redirect
 from rest_framework import status
 from rest_framework.generics import ListAPIView, CreateAPIView, \
-    UpdateAPIView, RetrieveAPIView, DestroyAPIView
+    UpdateAPIView, RetrieveAPIView, DestroyAPIView, RetrieveUpdateAPIView
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -77,7 +77,7 @@ class CreateInterview(CreateAPIView):
             return redirect(to='interviews')
 
 
-class UpdateInterview(UpdateAPIView):
+class UpdateInterview(RetrieveUpdateAPIView):
     queryset = Interview.objects.all()
     serializer_class = InterviewSerializer
 
