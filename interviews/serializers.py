@@ -5,14 +5,14 @@ from rest_framework.serializers import ModelSerializer
 from interviews.models import Interview
 
 
-class NewCustomInterviewSerializer(ModelSerializer):
-    participants = SlugRelatedField(many=True,
-                                    read_only=True,
-                                    slug_field='name')
-
-    class Meta:
-        model = Interview
-        fields = '__all__'
+# class NewCustomInterviewSerializer(ModelSerializer):
+#     participants = SlugRelatedField(many=True,
+#                                     read_only=True,
+#                                     slug_field='name')
+#
+#     class Meta:
+#         model = Interview
+#         fields = '__all__'
 
 
 class InterviewSerializer(ModelSerializer):

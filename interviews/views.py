@@ -10,13 +10,13 @@ from rest_framework.generics import ListAPIView, CreateAPIView, \
 from rest_framework.response import Response
 
 from interviews.models import Interview
-from interviews.serializers import InterviewSerializer, CustomInterviewSerializer, NewCustomInterviewSerializer
+from interviews.serializers import InterviewSerializer, CustomInterviewSerializer
 from participants.models import Participant
 
 
 class GetInterview(ListAPIView):
     queryset = Interview.objects.all()
-    serializer_class = NewCustomInterviewSerializer
+    serializer_class = CustomInterviewSerializer
 
 
 class CreateInterview(CreateAPIView):
