@@ -1,0 +1,1 @@
+web: gunicorn Interview_Scheduler.wsgi --log-file -
