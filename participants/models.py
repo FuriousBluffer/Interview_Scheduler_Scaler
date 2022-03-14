@@ -9,7 +9,7 @@ class Participant(models.Model):
     resume = models.FileField(null=True, blank=True, upload_to='resumes/')
 
     class Meta:
-        ordering = ['name']
+        ordering = ['id']
 
     def __str__(self):
         return self.name

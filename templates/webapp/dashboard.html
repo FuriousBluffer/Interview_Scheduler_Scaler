@@ -1,30 +1,54 @@
 {% extends 'base.html' %}
 {% block content %}
-<table class="table table-hover">
-  <thead>
-    <tr>
-      <th scope="col">Sr. Number</th>
-      <th scope="col">Start Time</th>
-      <th scope="col">End Time</th>
-      <th scope="col">Number of Participants</th>
-{#      <th scope="col">Participants</th>#}
-      <th scope="col">Details</th>
-    </tr>
-  </thead>
-  <tbody>
-  {% for interview in interviews %}
-      <tr>
-          <th scope="row">{{ forloop.counter }}</th>
-          <td>{{ interview.start_time }}</td>
-          <td>{{ interview.end_time }}</td>
-          <td>{{ interview.participants.count }}</td>
-{#          <td>{{ interview.participants.name }}</td>#}
-          <td><a href="{% url 'retrieve_interview' interview.id %}">Click Here</a></td>
-      <td><a href="{% url 'update_interview' interview.id%}">Edit</a></td>
-      <td><a href="{% url 'delete_interview' interview.id%}">Delete</a></td>
-    </tr>
-  {% endfor %}
-  </tbody>
-</table>
-    <a href="{% url 'create_interview' %}">Add an Interview</a>
+    <h2><center>Upcoming Interviews</center></h2>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">Sr. Number</th>
+            <th scope="col">Start Time</th>
+            <th scope="col">End Time</th>
+            <th scope="col">Number of Participants</th>
+            {#      <th scope="col">Participants</th>#}
+            <th scope="col">Details</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for interview in interviews %}
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td>{{ interview.start_time }}</td>
+                <td>{{ interview.end_time }}</td>
+                <td>{{ interview.participants.count }}</td>
+                {#          <td>{{ interview.participants.name }}</td>#}
+                <td><a href="{% url 'retrieve_interview' interview.id %}">Click Here</a></td>
+                <td><a href="{% url 'update_interview' interview.id %}">Edit</a></td>
+                <td><a href="{% url 'delete_interview' interview.id %}">Delete</a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <button type="button" class="btn btn-outline-primary"><a href="{% url 'create_interview' %}">Add an Interview</a></button>
+    <br>
+    <br>
+    <br>
+    <h2><center>Participants</center></h2>
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Participant ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for participant in participants %}
+            <tr>
+                <th scope="row">{{ participant.id }}</th>
+                <td>{{ participant.name }}</td>
+                <td>{{ participant.email }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <button type="button" class="btn btn-outline-primary"><a href="{% url 'create_participant' %}">Add a Participant</a></button>
 {% endblock %}

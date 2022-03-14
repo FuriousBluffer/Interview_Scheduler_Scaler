@@ -1,17 +1,14 @@
-from django.shortcuts import render
-
 # Create your views here.
-from rest_framework.generics import RetrieveAPIView, ListAPIView, UpdateAPIView, RetrieveUpdateAPIView
+from rest_framework.generics import ListAPIView, CreateAPIView
 
 from participants.models import Participant
-from participants.serializers import ParticipantSerializer, DetailedParticipantSerializer
+from participants.serializers import ParticipantSerializer, CustomParticipantSerializer
 
 
 class GetParticipants(ListAPIView):
     queryset = Participant.objects.all()
     serializer_class = ParticipantSerializer
 
-
-class ResumeUpdate(RetrieveUpdateAPIView):
+class CreateParticipants(CreateAPIView):
     queryset = Participant.objects.all()
-    serializer_class = DetailedParticipantSerializer
+    serializer_class = CustomParticipantSerializer

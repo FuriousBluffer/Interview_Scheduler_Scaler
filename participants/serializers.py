@@ -9,6 +9,12 @@ class ParticipantSerializer(ModelSerializer):
         fields = ('id', 'name')
 
 
+class CustomParticipantSerializer(ModelSerializer):
+    class Meta:
+        model = Participant
+        fields = '__all__'
+
+
 class DetailedParticipantSerializer(ModelSerializer):
     class Meta:
         model = Participant

@@ -24,7 +24,7 @@ class GetInterview(ListAPIView):
     serializer_class = NewCustomInterviewSerializer
 
     def get(self, request):
-        return Response({'interviews': self.get_queryset()})
+        return Response({'interviews': self.get_queryset(), 'participants': Participant.objects.all()})
 
 
 class CreateInterview(CreateAPIView):
