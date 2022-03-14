@@ -1,7 +1,8 @@
 from django.urls import path
 
-from participants.views import GetParticipant
+from participants.views import GetParticipants, ResumeUpdate
 
 urlpatterns = [
-    path('participant/<int:pk>/', GetParticipant.as_view(), name='participant'),
+    path('', GetParticipants.as_view(), name='participants'),
+    path('resume/<int:pk>/', ResumeUpdate.as_view(), name='resume'),
 ]

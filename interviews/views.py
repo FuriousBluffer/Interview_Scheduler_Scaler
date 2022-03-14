@@ -26,24 +26,25 @@ class CreateInterview(CreateAPIView):
     def post(self, request, *args, **kwargs):
         data = request.data
         if len(data['participants']) < 2:
-            return Response("A minimum of 2 participants is required", status=status.HTTP_400_BAD_REQUEST)
+            return Response({"status": "error", "message": "A minimum of 2 participants is required"},
+                            status=status.HTTP_406_NOT_ACCEPTABLE)
         if data['end_time'] <= data['start_time']:
-            return Response("Let the interview begin before ending it")
+            return Response({"status": "error", "message": "Let the interview begin before ending it"},
+                            status=status.HTTP_406_NOT_ACCEPTABLE)
         serializer = self.serializer_class(data=data, many=False)
         participants = data['participants']
         for i in participants:
             participant = Participant.objects.get(id=i)
             individual_interviews = participant.interview_set.all()
             for j in individual_interviews.values():
-                # print(type(data['start_time']))
-                # print(type(j['start_time']))
                 if (j['end_time'] > datetime.datetime.strptime(data['start_time'], '%H:%M').time() >= j[
                     'start_time']) or (
                         j['end_time'] >= datetime.datetime.strptime(data['end_time'], '%H:%M').time() > j[
                     'start_time']) or (
                         datetime.datetime.strptime(data['start_time'], '%H:%M').time() <= j['start_time'] and j[
                     'end_time'] <= datetime.datetime.strptime(data['end_time'], '%H:%M').time()):
-                    return Response('Interview Conflicts Exists')
+                    return Response({'status': "error", 'message': 'Interview Conflict exists'},
+                                    status=status.HTTP_409_CONFLICT)
         if serializer.is_valid():
             smtp_server = "smtp-relay.sendinblue.com"
             port = 587  # For starttls
@@ -73,10 +74,12 @@ class UpdateInterview(UpdateAPIView):
     def put(self, request, *args, **kwargs):
         data = request.data
         if len(data['participants']) < 2:
-            return Response("A minimum of 2 participants is required", status=status.HTTP_400_BAD_REQUEST)
+            return Response({"status": "error", "message": "A minimum of 2 participants is required"},
+                            status=status.HTTP_406_NOT_ACCEPTABLE)
         interview = self.get_object()
         if data['end_time'] <= data['start_time']:
-            return Response("Let the interview begin before ending it")
+            return Response({"status": "error", "message": "Let the interview begin before ending it"},
+                            status=status.HTTP_406_NOT_ACCEPTABLE)
         serializer = self.serializer_class(interview, data=data, many=False)
         participants = data['participants']
         for i in participants:
@@ -93,7 +96,8 @@ class UpdateInterview(UpdateAPIView):
                     'start_time']) or (
                         datetime.datetime.strptime(data['start_time'], '%H:%M').time() <= j['start_time'] and j[
                     'end_time'] <= datetime.datetime.strptime(data['end_time'], '%H:%M').time()):
-                    return Response('Interview Conflicts Exists')
+                    return Response({'status': "error", 'message': 'Interview Conflict exists'},
+                                    status=status.HTTP_409_CONFLICT)
         if serializer.is_valid():
             smtp_server = "smtp-relay.sendinblue.com"
             port = 587  # For starttls
