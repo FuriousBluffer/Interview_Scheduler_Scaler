@@ -2,21 +2,19 @@
 import datetime
 import smtplib
 
-from django.core.exceptions import ValidationError
-from django.db.models.signals import m2m_changed
 from rest_framework import status
 from rest_framework.generics import ListAPIView, CreateAPIView, \
     UpdateAPIView, RetrieveAPIView, DestroyAPIView
 from rest_framework.response import Response
 
 from interviews.models import Interview
-from interviews.serializers import InterviewSerializer, CustomInterviewSerializer
+from interviews.serializers import InterviewSerializer
 from participants.models import Participant
 
 
 class GetInterview(ListAPIView):
     queryset = Interview.objects.all()
-    serializer_class = CustomInterviewSerializer
+    serializer_class = InterviewSerializer
 
 
 class CreateInterview(CreateAPIView):
