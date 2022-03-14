@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">Sr. Number</th>
+      <th scope="col">Start Time</th>
+      <th scope="col">End Time</th>
+      <th scope="col">Number of Participants</th>
+{#      <th scope="col">Participants</th>#}
+      <th scope="col">Details</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for interview in interviews %}
+      <tr>
+          <th scope="row">{{ forloop.counter }}</th>
+          <td>{{ interview.start_time }}</td>
+          <td>{{ interview.end_time }}</td>
+          <td>{{ interview.participants.count }}</td>
+{#          <td>{{ interview.participants.name }}</td>#}
+          <td><a href="{% url 'retrieve_interview' interview.id %}">Click Here</a></td>
+      <td><a href="{% url 'update_interview' interview.id%}">Edit</a></td>
+      <td><a href="{% url 'delete_interview' interview.id%}">Delete</a></td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+    <a href="{% url 'create_interview' %}">Add an Interview</a>
+{% endblock %}
