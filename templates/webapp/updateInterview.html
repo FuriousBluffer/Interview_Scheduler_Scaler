@@ -5,19 +5,20 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{% url 'interviews' %}">Interviews</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Create</li>
+            <li class="breadcrumb-item active" aria-current="page">Update</li>
         </ol>
     </nav>
     <br>
-    <form action="/interviews/create/" method="POST">
+    <form action="{% url 'update_interview' interview.id %}" data-method="PUT">
         {% csrf_token %}
         <div class="form-group ">
+            <input name="id" type="hidden" value="{{ interview.id }}">
             <label>Start time</label>
-            <input name="start_time" class="form-control" type="time" value="">
+            <input name="start_time" class="form-control" type="time" value={{ interview.start_time|time:'H:i' }}>
         </div>
         <div class="form-group ">
             <label>End time</label>
-            <input name="end_time" class="form-control" type="time" value="">
+            <input name="end_time" class="form-control" type="time" value={{ interview.end_time|time:'H:i' }}>
         </div>
         <div class="form-group ">
             <label>
@@ -29,7 +30,7 @@
                 {% endfor %}
             </select>
         </div>
-        <button class="btn btn-primary" type="submit" value="Add">Add</button>
+        <button class="btn btn-primary" type="submit" value="Save">Update</button>
     </form>
     {% if message %}
         {#        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">#}
@@ -50,7 +51,7 @@
                         {{ message }}
                     </div>
                     <div class="modal-footer">
-                        <a href="{% url 'create_interview' %}">
+                        <a href="{% url 'update_interview' interview.id %}">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         </a>
                     </div>
@@ -58,7 +59,6 @@
             </div>
         </div>
     {% endif %}
-    <br>
-    <br>
+
 {% endblock %}
 

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load rest_framework %}
+{% block content %}
+    <br>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'interviews' %}">Interviews</a></li>
+            <li class="breadcrumb-item active" aria-current="page">View</li>
+        </ol>
+    </nav>
+    <br>
+    <h3>Start Time: {{ interview.start_time|time:'H:i' }}</h3>
+    <h3>End Time: {{ interview.end_time|time:'H:i' }}</h3>
+    <br>
+    <h3>Participants </h3>
+    <ul class="list-group list-group-flush" style="width: 20%;">
+        {% for participant in interview.participants.all %}
+            <li class="list-group-item">{{ participant.name }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
