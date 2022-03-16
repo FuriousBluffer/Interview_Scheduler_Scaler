@@ -9,8 +9,8 @@
         </ol>
     </nav>
     <br>
-    <form action="{% url 'update_interview' interview.id %}" data-method="PUT">
-        {% csrf_token %}
+    <form action="{% url 'update_interview' interview.id %}" method="post">
+    {% csrf_token %}
         <div class="form-group ">
             <input name="id" type="hidden" value="{{ interview.id }}">
             <label>Start time</label>

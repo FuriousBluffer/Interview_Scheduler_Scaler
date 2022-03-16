@@ -105,18 +105,23 @@ class UpdateInterview(UpdateAPIView):
                          'participants': Participant.objects.all()})
         # return Response({'serializer': self.serializer_class, 'interview': self.get_object()})
 
-    def put(self, request, *args, **kwargs):
-        data = request.data
+    def post(self, request, *args, **kwargs):
+        data = dict(request.data)
+        data['start_time'] = data['start_time'][0]
+        data['end_time'] = data['end_time'][0]
         if data['end_time'] <= data['start_time']:
             return Response({"message": "Let the interview begin before ending it",
-                             'participants': Participant.objects.all()},
+                             'participants': Participant.objects.all(),
+                             'interview': self.get_object()},
                             status=status.HTTP_406_NOT_ACCEPTABLE)
         if 'participants' not in data:
             return Response({"message": "A minimum of 2 participants is required",
-                             'participants': Participant.objects.all()})
+                             'participants': Participant.objects.all(),
+                             'interview': self.get_object()})
         if len(data['participants']) < 2:
             return Response({"message": "A minimum of 2 participants is required",
-                             'participants': Participant.objects.all()})
+                             'participants': Participant.objects.all(),
+                             'interview': self.get_object()})
         interview = self.get_object()
         serializer = self.serializer_class(interview, data=data, many=False)
         participants = data['participants']
@@ -128,7 +133,8 @@ class UpdateInterview(UpdateAPIView):
                     continue
                 if interview_conflict_exists(j, data):
                     return Response({'message': 'Interview Conflict exists',
-                                     'participants': Participant.objects.all()})
+                                     'participants': Participant.objects.all(),
+                                     'interview': self.get_object()})
         if serializer.is_valid():
             try:
                 smtp_server = "smtp-relay.sendinblue.com"
@@ -152,6 +158,56 @@ class UpdateInterview(UpdateAPIView):
                 print("Mails not sent")
             serializer.save()
             return redirect(to='interviews')
+
+
+def trial(request, pk):
+    self = Interview.objects.get(id=pk)
+    data = request.data
+    if data['end_time'] <= data['start_time']:
+        return Response({"message": "Let the interview begin before ending it",
+                         'participants': Participant.objects.all()},
+                        status=status.HTTP_406_NOT_ACCEPTABLE)
+    if 'participants' not in data:
+        return Response({"message": "A minimum of 2 participants is required",
+                         'participants': Participant.objects.all()})
+    if len(data['participants']) < 2:
+        return Response({"message": "A minimum of 2 participants is required",
+                         'participants': Participant.objects.all()})
+    interview = self
+    serializer = InterviewSerializer(interview, data=data, many=False)
+    participants = data['participants']
+    for i in participants:
+        participant = Participant.objects.get(id=i)
+        individual_interviews = participant.interview_set.all()
+        for j in individual_interviews.values():
+            if j['id'] == interview.pk:
+                continue
+            if interview_conflict_exists(j, data):
+                return Response({'message': 'Interview Conflict exists',
+                                 'participants': Participant.objects.all()})
+    if serializer.is_valid():
+        try:
+            smtp_server = "smtp-relay.sendinblue.com"
+            port = 587  # For starttls
+            sender_email = "spams9916@gmail.com"
+            password = "8hb2qFtwNnUBT0MP"
+            server = smtplib.SMTP(smtp_server, port)
+            server.ehlo()  # Can be omitted
+            server.starttls()
+            server.ehlo()
+            server.login(sender_email, password)
+            for i in participants:
+                participant = Participant.objects.get(id=i)
+                receiver_email = participant.email
+                message = f"Subject: Interview Schedule\n\nHey {participant.name},\n\n" \
+                          f"You have an interview scheduled from {data['start_time']} to {data['end_time']}.\n\n" \
+                          f"Regards,\nAdmin"
+                server.sendmail(sender_email, receiver_email, message)
+            server.quit()
+        except:
+            print("Mails not sent")
+        serializer.save()
+        return redirect(to='interviews')
 
 
 class RetrieveInterview(RetrieveAPIView):
