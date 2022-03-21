@@ -26,12 +26,17 @@
             </label>
             <select multiple="" class="form-control" name="participants">
                 {% for participant in participants %}
-                    <option value="{{ participant.id }}">{{ participant.name }}</option>
+                    <option value="{{ participant.id }}" {% if participant.id in selected_values %} selected {% endif %}>>{{ participant.name }}</option>
                 {% endfor %}
             </select>
         </div>
         <button class="btn btn-primary" type="submit" value="Save">Update</button>
     </form>
+    <ul class="list-group list-group-flush" style="width: 20%;">
+        {% for participant in interview.participants.all %}
+            <li class="list-group-item">{{ participant.name }}</li>
+        {% endfor %}
+    </ul>
     {% if message %}
         {#        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">#}
         {#                Launch demo modal#}

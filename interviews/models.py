@@ -6,8 +6,8 @@ from django.db import models
 
 class Interview(models.Model):
     participants = models.ManyToManyField("participants.Participant")
-    start_time = models.TimeField()
-    end_time = models.TimeField()
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
 
     class Meta:
         ordering = ["start_time", "end_time"]

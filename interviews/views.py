@@ -6,7 +6,7 @@ from django.http import HttpResponse
 from django.shortcuts import redirect
 from rest_framework import status
 from rest_framework.generics import ListAPIView, CreateAPIView, \
-    RetrieveAPIView, DestroyAPIView, RetrieveUpdateAPIView, UpdateAPIView
+    RetrieveAPIView, DestroyAPIView, UpdateAPIView
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
 
@@ -16,10 +16,11 @@ from participants.models import Participant
 
 
 def interview_conflict_exists(j, data):
-    if (j['end_time'] > datetime.datetime.strptime(data['start_time'], '%H:%M').time() >= j['start_time']) or (
-            j['end_time'] >= datetime.datetime.strptime(data['end_time'], '%H:%M').time() > j['start_time']) or (
-            datetime.datetime.strptime(data['start_time'], '%H:%M').time() <= j['start_time'] and j['end_time'] <=
-            datetime.datetime.strptime(data['end_time'], '%H:%M').time()):
+    naive = datetime.datetime.replace(tzinfo=None)
+    if (j['end_time'] > naive.strptime(data['start_time'], '%Y-%m-%dT%H:%M') >= j['start_time']) or (
+            j['end_time'] >= naive.strptime(data['end_time'], '%Y-%m-%dT%H:%M') > j['start_time']) or (
+            naive.strptime(data['start_time'], '%Y-%m-%dT%H:%M') <= j['start_time'] and j['end_time'] <=
+            naive.strptime(data['end_time'], '%Y-%m-%dT%H:%M')):
         return True
     else:
         return False
@@ -33,6 +34,8 @@ class GetInterview(ListAPIView):
 
     def get(self, request):
         return Response({'interviews': self.get_queryset(), 'participants': Participant.objects.all()})
+
+
 
 
 class CreateInterview(CreateAPIView):

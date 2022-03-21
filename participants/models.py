@@ -7,6 +7,7 @@ class Participant(models.Model):
     name = models.CharField(max_length=255)
     email = models.EmailField()
     resume = models.FileField(null=True, blank=True, upload_to='resumes/')
+    type = models.IntegerField(default=0)
 
     class Meta:
         ordering = ['id']
